@@ -207,8 +207,9 @@ header p {
 }
 .btn-clear {
   position: absolute;
-  top: 12px;
-  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 20px;
   background: rgba(229,62,62,0.08);
   border: none;
   color: var(--red);
@@ -225,7 +226,7 @@ header p {
   line-height: 1;
   z-index: 2;
 }
-.btn-clear:hover { background: rgba(229,62,62,0.18); transform: scale(1.1); }
+.btn-clear:hover { background: rgba(229,62,62,0.18); transform: translateY(-50%) scale(1.1); }
 .btn-clear.show { display: flex; }
 .btn-mic {
   border: none;
