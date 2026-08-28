@@ -1,4 +1,4 @@
-const CACHE_NAME = 'humha-v10';
+const CACHE_NAME = 'thungara-v1';
 const ASSETS = [
   './',
   './index.html',

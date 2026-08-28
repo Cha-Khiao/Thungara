@@ -1,6 +1,6 @@
 {
-  "name": "ฮัมหาเพลงลูกทุ่ง",
-  "short_name": "ฮัมหาเพลง",
+  "name": "Thungara",
+  "short_name": "Thungara",
   "description": "ค้นหาเพลงลูกทุ่งจากเนื้อร้อง พิมพ์หรือร้องได้เลย",
   "start_url": "./index.html",
   "display": "standalone",
