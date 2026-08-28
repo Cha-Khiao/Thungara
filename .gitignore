@@ -1,0 +1,13 @@
+# Original CSV data (do not modify or upload)
+*.csv
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude
+.claude/

@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#F59E0B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>ฮัมหาเพลงลูกทุ่ง</title>
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #F59E0B;
+  --primary-dark: #D97706;
+  --primary-light: #FEF3C7;
+  --accent: #92400E;
+  --green: #48BB78;
+  --green-dark: #38A169;
+  --red: #E53E3E;
+  --bg: #FFFBF0;
+  --bg-card: #FFFFFF;
+  --bg-input: #F9FAFB;
+  --text: #1F2937;
+  --text-secondary: #6B7280;
+  --text-muted: #9CA3AF;
+  --border: #E5E7EB;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+  --radius: 16px;
+  --mic-recording: #EF4444;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F0F14;
+    --bg-card: #1A1A22;
+    --bg-input: #22222C;
+    --text: #F3F4F6;
+    --text-secondary: #9CA3AF;
+    --text-muted: #6B7280;
+    --border: #2D2D3A;
+    --shadow: 0 1px 3px rgba(0,0,0,0.4);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.6);
+    --primary-light: #422006;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F0F14;
+  --bg-card: #1A1A22;
+  --bg-input: #22222C;
+  --text: #F3F4F6;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --border: #2D2D3A;
+  --shadow: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.6);
+  --primary-light: #422006;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Prompt', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Header */
+header {
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%);
+  padding: 36px 16px 52px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -30%;
+  width: 160%;
+  height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+header h1 {
+  color: #FFF;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  letter-spacing: 0.5px;
+  position: relative;
+}
+header p {
+  color: rgba(255,255,255,0.9);
+  font-size: 0.9rem;
+  font-weight: 300;
+  position: relative;
+}
+.btn-theme {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: #FFF;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  z-index: 5;
+}
+.btn-theme:hover { background: rgba(255,255,255,0.35); }
+
+/* Search Area */
+.search-area {
+  margin-top: -36px;
+  padding: 0 16px;
+  position: relative;
+  z-index: 10;
+}
+.search-box {
+  background: var(--bg-card);
+  border-radius: 20px;
+  box-shadow: var(--shadow-lg);
+  padding: 20px;
+}
+.search-input-wrap {
+  position: relative;
+  background: var(--bg-input);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  transition: border-color 0.25s, box-shadow 0.25s;
+  flex: 1;
+  min-width: 0;
+}
+.search-input-wrap:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
+}
+.search-input-wrap textarea {
+  display: block;
+  width: calc(100% - 32px);
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1rem;
+  font-family: 'Prompt', sans-serif;
+  color: var(--text);
+  resize: none;
+  overflow-y: auto;
+  min-height: 24px;
+  max-height: 150px;
+  line-height: 1.6;
+}
+.search-input-wrap textarea::placeholder {
+  color: var(--text-muted);
+}
+.search-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+.search-progress {
+  height: 3px;
+  background: var(--border);
+  border-radius: 3px;
+  margin-top: 10px;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.search-progress.active {
+  opacity: 1;
+}
+.search-progress .bar {
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark), var(--primary));
+  border-radius: 3px;
+  animation: progressSlide 0.8s ease-in-out infinite;
+}
+@keyframes progressSlide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
+.btn-clear {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(229,62,62,0.08);
+  border: none;
+  color: var(--red);
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  line-height: 1;
+  z-index: 2;
+}
+.btn-clear:hover { background: rgba(229,62,62,0.18); transform: scale(1.1); }
+.btn-clear.show { display: flex; }
+.btn-mic {
+  border: none;
+  color: #FFF;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: 'Prompt', sans-serif;
+  transition: all 0.2s;
+}
+.btn-mic svg { width: 16px; height: 16px; }
+
+/* Mic Button */
+.btn-mic {
+  background: var(--green);
+}
+.btn-mic:hover { background: var(--green-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(72,187,120,0.3); }
+.btn-mic:active { transform: translateY(0); }
+.btn-mic.recording {
+  background: var(--mic-recording);
+  color: #FFF;
+}
+.btn-mic.unavailable {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Recording Overlay */
+.rec-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 200;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: recFadeIn 0.3s ease;
+}
+.rec-overlay.show { display: flex; }
+@keyframes recFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.rec-ring {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+.rec-ring::before, .rec-ring::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid rgba(239,68,68,0.3);
+}
+.rec-ring::before {
+  width: 100%;
+  height: 100%;
+  animation: recPulse1 2s ease-in-out infinite;
+}
+.rec-ring::after {
+  width: 130%;
+  height: 130%;
+  animation: recPulse2 2s ease-in-out infinite 0.4s;
+}
+@keyframes recPulse1 {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.12); opacity: 0.2; }
+}
+@keyframes recPulse2 {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.08); opacity: 0.1; }
+}
+
+.rec-mic-icon {
+  width: 100px;
+  height: 100px;
+  background: var(--mic-recording);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 40px rgba(239,68,68,0.4);
+  transition: transform 0.2s;
+  z-index: 1;
+}
+.rec-mic-icon:hover { transform: scale(1.05); }
+.rec-mic-icon:active { transform: scale(0.95); }
+.rec-mic-icon svg { width: 40px; height: 40px; color: #FFF; }
+
+.rec-waves {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 48px;
+  margin-bottom: 24px;
+}
+.rec-wave-bar {
+  width: 4px;
+  border-radius: 99px;
+  background: var(--mic-recording);
+  animation: waveBar 1s ease-in-out infinite;
+}
+.rec-wave-bar:nth-child(1)  { height: 12px; animation-delay: 0s; }
+.rec-wave-bar:nth-child(2)  { height: 20px; animation-delay: 0.1s; }
+.rec-wave-bar:nth-child(3)  { height: 32px; animation-delay: 0.15s; }
+.rec-wave-bar:nth-child(4)  { height: 40px; animation-delay: 0.2s; }
+.rec-wave-bar:nth-child(5)  { height: 48px; animation-delay: 0.25s; }
+.rec-wave-bar:nth-child(6)  { height: 44px; animation-delay: 0.3s; }
+.rec-wave-bar:nth-child(7)  { height: 36px; animation-delay: 0.35s; }
+.rec-wave-bar:nth-child(8)  { height: 48px; animation-delay: 0.2s; }
+.rec-wave-bar:nth-child(9)  { height: 40px; animation-delay: 0.15s; }
+.rec-wave-bar:nth-child(10) { height: 28px; animation-delay: 0.1s; }
+.rec-wave-bar:nth-child(11) { height: 36px; animation-delay: 0.25s; }
+.rec-wave-bar:nth-child(12) { height: 44px; animation-delay: 0.3s; }
+.rec-wave-bar:nth-child(13) { height: 32px; animation-delay: 0.35s; }
+.rec-wave-bar:nth-child(14) { height: 20px; animation-delay: 0.2s; }
+.rec-wave-bar:nth-child(15) { height: 12px; animation-delay: 0.1s; }
+@keyframes waveBar {
+  0%, 100% { transform: scaleY(0.4); opacity: 0.5; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+.rec-status {
+  color: rgba(255,255,255,0.9);
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.rec-transcript {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.9rem;
+  max-width: 320px;
+  text-align: center;
+  min-height: 1.4em;
+  line-height: 1.5;
+}
+.rec-transcript .interim { color: rgba(255,255,255,0.4); }
+.rec-hint {
+  position: absolute;
+  bottom: 48px;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.8rem;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.filter-select {
+  flex: 1;
+  min-width: 100px;
+  padding: 9px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-input);
+  color: var(--text);
+  font-family: 'Prompt', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  transition: border-color 0.2s;
+}
+.filter-select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* Stats */
+.stats {
+  text-align: center;
+  padding: 14px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+/* Results */
+.results {
+  padding: 0 16px 100px;
+}
+.song-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: 1.5px solid var(--border);
+  position: relative;
+}
+.song-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--primary);
+}
+.song-card:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow);
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.song-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+}
+.match-score {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  background: var(--primary-light);
+  padding: 3px 10px;
+  border-radius: 99px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.song-artist {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.song-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.badge {
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  border-radius: 99px;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.lyrics-preview {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.lyrics-preview mark {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  border-radius: 3px;
+  padding: 1px 3px;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 100;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.modal-overlay.show {
+  display: flex;
+}
+.modal {
+  background: var(--bg-card);
+  border-radius: 24px 24px 0 0;
+  max-width: 720px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 20px 24px 40px;
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0.8; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.modal-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 99px;
+  margin: 0 auto 20px;
+}
+.modal-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+.modal-artist {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+.modal-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.modal-lyrics {
+  white-space: pre-wrap;
+  line-height: 2;
+  font-size: 0.95rem;
+  color: var(--text);
+  padding: 20px;
+  background: var(--bg-input);
+  border-radius: 12px;
+}
+.modal-lyrics mark {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  border-radius: 3px;
+  padding: 1px 3px;
+}
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-muted);
+}
+.empty-state .icon {
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+.empty-state p {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  max-width: 280px;
+  margin: 0 auto;
+}
+.not-found-title {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 16px !important;
+}
+.search-tips {
+  background: rgba(245,158,11,0.06);
+  border-radius: 12px;
+  padding: 14px 20px;
+  text-align: left;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.search-tips .tips-title {
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-bottom: 8px !important;
+  font-size: 0.85rem;
+}
+.search-tips ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.search-tips li {
+  font-size: 0.82rem;
+  padding: 4px 0;
+  padding-left: 18px;
+  position: relative;
+  color: var(--text-muted);
+}
+.search-tips li::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+  font-weight: bold;
+}
+
+/* No speech API warning */
+.warning-banner {
+  background: #FEF3C7;
+  border: 1px solid #F59E0B;
+  color: #92400E;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  margin-top: 12px;
+  display: none;
+}
+
+/* Scroll to top */
+.btn-top {
+  position: fixed;
+  bottom: 28px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary);
+  color: #FFF;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s, background 0.2s;
+}
+.btn-top.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.btn-top:hover { background: var(--primary-dark); }
+.btn-top:active { transform: scale(0.92); }
+
+/* Card fade-in animation */
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.song-card {
+  animation: cardFadeIn 0.35s ease both;
+}
+
+
+@media (min-width: 640px) {
+  header { padding: 44px 16px 60px; }
+  header h1 { font-size: 2.2rem; }
+  .search-area { margin-top: -40px; }
+  .search-box { padding: 24px; border-radius: 24px; }
+  .modal { border-radius: 24px; max-height: 80vh; margin-bottom: 20px; padding: 20px 28px 40px; }
+  .modal-overlay { align-items: center; }
+  .song-card { padding: 20px 24px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" title="สลับโหมดมืด/สว่าง"></button>
+  <h1>ฮัมหาเพลงลูกทุ่ง</h1>
+  <p>ค้นหาเพลงจากเนื้อร้อง พิมพ์หรือร้องได้เลย</p>
+</header>
+
+<div class="search-area">
+  <div class="search-box container">
+    <!-- Search Input -->
+    <div class="search-input-wrap">
+      <textarea id="search-input" rows="1" placeholder="พิมพ์หรือร้องเนื้อเพลง..."></textarea>
+      <button class="btn-clear" id="btn-clear" onclick="clearSearch()">&times;</button>
+    </div>
+    <!-- Action Buttons -->
+    <div class="search-actions">
+      <button class="btn-mic" id="mic-btn" onclick="toggleRecording()" title="กดเพื่อร้องค้นหา">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+        ร้องค้นหา
+      </button>
+    </div>
+    <div class="search-progress" id="search-progress"><div class="bar"></div></div>
+    <!-- Filters -->
+    <div class="filters">
+      <select class="filter-select" id="filter-artist" onchange="doSearch()">
+        <option value="">ศิลปินทั้งหมด</option>
+      </select>
+      <select class="filter-select" id="filter-emotion" onchange="doSearch()">
+        <option value="">อารมณ์ทั้งหมด</option>
+      </select>
+      <select class="filter-select" id="filter-year" onchange="doSearch()">
+        <option value="">ปีทั้งหมด</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="stats container" id="stats"></div>
+
+<!-- Loading -->
+<div class="loading container" id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text">กำลังโหลดข้อมูล 1,500 เพลง...</div>
+</div>
+
+<!-- Results -->
+<div class="results container" id="results" style="display:none"></div>
+
+<!-- Empty State -->
+<div class="empty-state container" id="empty-state" style="display:none">
+  <div class="icon">&#x1F3B5;</div>
+  <p>พิมพ์เนื้อเพลงหรือกดไมค์ร้องเพลง<br>แล้วระบบจะหาเพลงให้</p>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-artist" id="modal-artist"></div>
+    <div class="modal-meta" id="modal-meta"></div>
+    <div class="modal-lyrics" id="modal-lyrics"></div>
+  </div>
+</div>
+
+<!-- Recording Overlay -->
+<div class="rec-overlay" id="rec-overlay" onclick="toggleRecording()">
+  <div class="rec-ring">
+    <div class="rec-mic-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+    </div>
+  </div>
+  <div class="rec-waves">
+    <div class="rec-wave-bar"></div><div class="rec-wave-bar"></div><div class="rec-wave-bar"></div>
+    <div class="rec-wave-bar"></div><div class="rec-wave-bar"></div><div class="rec-wave-bar"></div>
+    <div class="rec-wave-bar"></div><div class="rec-wave-bar"></div><div class="rec-wave-bar"></div>
+    <div class="rec-wave-bar"></div><div class="rec-wave-bar"></div><div class="rec-wave-bar"></div>
+    <div class="rec-wave-bar"></div><div class="rec-wave-bar"></div><div class="rec-wave-bar"></div>
+  </div>
+  <div class="rec-status" id="rec-status">กำลังฟัง...</div>
+  <div class="rec-transcript" id="rec-transcript"></div>
+  <div class="rec-hint">แตะเพื่อหยุด</div>
+</div>
+
+<!-- Scroll to top -->
+<button class="btn-top" id="btn-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="กลับขึ้นบน">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+<script>
+// ===== State =====
+let DATA = null;
+let vocabSet = null;
+let maxWordLen = 0;
+let isRecording = false;
+let recognition = null;
+let currentQuery = '';
+let debounceTimer = null;
+let searchWorker = null;
+
+// ===== Data Loading =====
+async function loadData() {
+  try {
+    const res = await fetch('data.json');
+    DATA = await res.json();
+    vocabSet = new Set(DATA.vocab);
+    maxWordLen = DATA.maxWordLen;
+    populateFilters();
+
+    if (window.Worker) {
+      searchWorker = new Worker('search-worker.js');
+      searchWorker.postMessage({ type: 'init', payload: DATA });
+      searchWorker.onmessage = function(e) {
+        if (e.data.type === 'results') {
+          document.getElementById('search-progress').classList.remove('active');
+          renderResults(e.data.payload, e.data.query);
+        }
+      };
+    }
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('empty-state').style.display = 'block';
+    document.getElementById('stats').textContent = DATA.songs.length + ' เพลงพร้อมค้นหา';
+  } catch (e) {
+    document.getElementById('loading').innerHTML =
+      '<p style="color:var(--mic-recording)">โหลดข้อมูลไม่สำเร็จ กรุณารีเฟรช</p>';
+  }
+}
+
+function populateFilters() {
+  const fArtist = document.getElementById('filter-artist');
+  const fEmotion = document.getElementById('filter-emotion');
+  const fYear = document.getElementById('filter-year');
+  DATA.artists.forEach(a => {
+    fArtist.insertAdjacentHTML('beforeend', '<option value="'+esc(a)+'">'+esc(a)+'</option>');
+  });
+  DATA.emotions.forEach(e => {
+    fEmotion.insertAdjacentHTML('beforeend', '<option value="'+esc(e)+'">'+esc(e)+'</option>');
+  });
+  DATA.years.forEach(y => {
+    fYear.insertAdjacentHTML('beforeend', '<option value="'+esc(y)+'">'+esc(y)+'</option>');
+  });
+}
+
+// ===== Tokenizer (Longest Match) =====
+function tokenizeQuery(text) {
+  if (!vocabSet) return [];
+  const cleaned = text.replace(/[^฀-๿a-zA-Z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+  const segments = cleaned.split(/\s+/).filter(s => s.length > 0);
+  const tokens = [];
+  for (const seg of segments) {
+    let i = 0;
+    while (i < seg.length) {
+      let found = false;
+      for (let len = Math.min(maxWordLen, seg.length - i); len >= 2; len--) {
+        const candidate = seg.substring(i, i + len);
+        if (vocabSet.has(candidate)) {
+          tokens.push(candidate);
+          i += len;
+          found = true;
+          break;
+        }
+      }
+      if (!found) i++;
+    }
+  }
+  return tokens;
+}
+
+// ===== TF-IDF Query Vector =====
+function queryToVector(tokens) {
+  const tf = {};
+  let maxTf = 0;
+  for (const t of tokens) {
+    tf[t] = (tf[t] || 0) + 1;
+    if (tf[t] > maxTf) maxTf = tf[t];
+  }
+  if (maxTf === 0) return {};
+  const vec = {};
+  for (const [word, count] of Object.entries(tf)) {
+    const idx = DATA.vocab.indexOf(word);
+    if (idx >= 0) {
+      vec[String(idx)] = (count / maxTf) * DATA.idf[idx];
+    }
+  }
+  return vec;
+}
+
+// ===== Cosine Similarity =====
+function cosineSim(vecA, vecB) {
+  let dot = 0, magA = 0, magB = 0;
+  for (const [k, v] of Object.entries(vecA)) {
+    magA += v * v;
+    if (vecB[k] !== undefined) dot += v * vecB[k];
+  }
+  for (const v of Object.values(vecB)) magB += v * v;
+  if (magA === 0 || magB === 0) return 0;
+  return dot / (Math.sqrt(magA) * Math.sqrt(magB));
+}
+
+// ===== Hybrid Search =====
+function search(query) {
+  if (!DATA || !query.trim()) return [];
+
+  const q = query.trim().toLowerCase();
+  const tokens = tokenizeQuery(query.trim());
+  const qVec = queryToVector(tokens);
+  const hasVector = Object.keys(qVec).length > 0;
+
+  const filterArtist = document.getElementById('filter-artist').value;
+  const filterEmotion = document.getElementById('filter-emotion').value;
+  const filterYear = document.getElementById('filter-year').value;
+
+  const results = [];
+  for (let i = 0; i < DATA.songs.length; i++) {
+    const song = DATA.songs[i];
+
+    if (filterArtist && song.artist !== filterArtist) continue;
+    if (filterEmotion && song.emotion !== filterEmotion) continue;
+    if (filterYear && song.year !== filterYear) continue;
+
+    const lyrics = song.lyrics.toLowerCase();
+    let score = 0;
+
+    // Layer 1: Exact substring match (weight 0.3)
+    const exactMatch = lyrics.includes(q);
+    if (exactMatch) score += 0.3;
+
+    // Layer 2: Word overlap / N-gram (weight 0.2)
+    if (tokens.length > 0) {
+      let matched = 0;
+      for (const t of tokens) {
+        if (lyrics.includes(t)) matched++;
+      }
+      score += 0.2 * (matched / tokens.length);
+    }
+
+    // Layer 3: TF-IDF Cosine Similarity (weight 0.5)
+    if (hasVector) {
+      const cos = cosineSim(qVec, DATA.vectors[i]);
+      score += 0.5 * cos;
+    }
+
+    if (score > 0.01) {
+      results.push({ idx: i, score, exactMatch });
+    }
+  }
+
+  results.sort((a, b) => b.score - a.score);
+  return results.slice(0, 50);
+}
+
+// ===== Render Results =====
+function renderResults(results, query) {
+  const container = document.getElementById('results');
+  const emptyState = document.getElementById('empty-state');
+  const stats = document.getElementById('stats');
+
+  if (results.length === 0 && query.trim()) {
+    container.style.display = 'none';
+    emptyState.style.display = 'block';
+    emptyState.innerHTML = '<div class="icon">&#x1F50D;</div>'
+      + '<p class="not-found-title">ไม่พบเพลงที่ตรงกับ "' + esc(query) + '"</p>'
+      + '<div class="search-tips">'
+      + '<p class="tips-title">ลองวิธีนี้ดู</p>'
+      + '<ul>'
+      + '<li>พิมพ์เนื้อเพลงสั้นลง เช่น วลีที่จำได้</li>'
+      + '<li>ตรวจสอบตัวสะกดอีกครั้ง</li>'
+      + '<li>ลองร้องผ่านไมค์แทนการพิมพ์</li>'
+      + '<li>ลองเอาตัวกรองศิลปิน/อารมณ์/ปี ออก</li>'
+      + '</ul></div>';
+    stats.textContent = '';
+    return;
+  }
+
+  if (results.length === 0) {
+    container.style.display = 'none';
+    emptyState.style.display = 'block';
+    emptyState.innerHTML = '<div class="icon">&#x1F3B5;</div><p>พิมพ์เนื้อเพลงหรือกดไมค์ร้องเพลง<br>แล้วระบบจะหาเพลงให้</p>';
+    stats.textContent = DATA ? DATA.songs.length + ' เพลงพร้อมค้นหา' : '';
+    return;
+  }
+
+  emptyState.style.display = 'none';
+  container.style.display = 'block';
+  stats.textContent = 'พบ ' + results.length + ' เพลง';
+
+  let html = '';
+  for (let i = 0; i < results.length; i++) {
+    const r = results[i];
+    const song = DATA.songs[r.idx];
+    const pct = Math.round(r.score * 100);
+    const preview = highlightText(getPreview(song.lyrics, query), query);
+    const delay = Math.min(i * 0.04, 0.8);
+
+    html += '<div class="song-card" style="animation-delay:'+delay+'s" onclick="openModal('+r.idx+',\''+esc(query).replace(/'/g, "\\'")+'\')">'
+      + '<div class="card-header">'
+      + '<div class="song-title">' + esc(song.title) + '</div>'
+      + '<div class="match-score">' + pct + '%</div>'
+      + '</div>'
+      + '<div class="song-artist">' + esc(song.artist) + '</div>'
+      + '<div class="song-meta">'
+      + (song.year ? '<span class="badge">' + esc(song.year) + '</span>' : '')
+      + (song.emotion ? '<span class="badge">' + esc(song.emotion) + '</span>' : '')
+      + '</div>'
+      + '<div class="lyrics-preview">' + preview + '</div>'
+      + '</div>';
+  }
+  container.innerHTML = html;
+}
+
+function getPreview(lyrics, query) {
+  if (!query.trim()) return lyrics.substring(0, 120);
+  const q = query.trim().toLowerCase();
+  const idx = lyrics.toLowerCase().indexOf(q);
+  if (idx >= 0) {
+    const start = Math.max(0, idx - 40);
+    const end = Math.min(lyrics.length, idx + q.length + 80);
+    return (start > 0 ? '...' : '') + lyrics.substring(start, end) + (end < lyrics.length ? '...' : '');
+  }
+  return lyrics.substring(0, 120) + (lyrics.length > 120 ? '...' : '');
+}
+
+function highlightText(text, query) {
+  if (!query.trim()) return esc(text);
+  const escaped = esc(text);
+  const q = query.trim();
+  const regex = new RegExp('(' + escRegex(esc(q)) + ')', 'gi');
+  return escaped.replace(regex, '<mark>$1</mark>');
+}
+
+// ===== Modal =====
+function openModal(idx, query) {
+  const song = DATA.songs[idx];
+  document.getElementById('modal-title').textContent = song.title;
+  document.getElementById('modal-artist').textContent = song.artist;
+
+  let meta = '';
+  if (song.year) meta += '<span class="badge">' + esc(song.year) + '</span>';
+  if (song.emotion) meta += '<span class="badge">' + esc(song.emotion) + '</span>';
+  document.getElementById('modal-meta').innerHTML = meta;
+
+  const lyricsHtml = highlightText(song.lyrics, query || '');
+  document.getElementById('modal-lyrics').innerHTML = lyricsHtml;
+
+  document.getElementById('modal-overlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay') || e.target.closest('.modal-handle')) {
+    document.getElementById('modal-overlay').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+}
+
+// ===== Voice Recognition =====
+function initSpeechRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    document.getElementById('mic-btn').classList.add('unavailable');
+    return;
+  }
+
+  recognition = new SR();
+  recognition.lang = 'th-TH';
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
+
+  let finalTranscript = '';
+  const micBtn = document.getElementById('mic-btn');
+  const recOverlay = document.getElementById('rec-overlay');
+  const recStatus = document.getElementById('rec-status');
+  const recTranscript = document.getElementById('rec-transcript');
+
+  recognition.onstart = function() {
+    isRecording = true;
+    finalTranscript = '';
+    micBtn.classList.add('recording');
+    recOverlay.classList.add('show');
+    recStatus.textContent = 'กำลังฟัง...';
+    recTranscript.innerHTML = '<span class="interim">ร้องหรือพูดเนื้อเพลงได้เลย</span>';
+  };
+
+  recognition.onresult = function(event) {
+    let interim = '';
+    finalTranscript = '';
+    for (let i = 0; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        finalTranscript += event.results[i][0].transcript;
+      } else {
+        interim += event.results[i][0].transcript;
+      }
+    }
+    let html = '';
+    if (finalTranscript) html += esc(finalTranscript);
+    if (interim) html += '<span class="interim">' + esc(interim) + '</span>';
+    recTranscript.innerHTML = html || '<span class="interim">ร้องหรือพูดเนื้อเพลงได้เลย</span>';
+    if (finalTranscript || interim) recStatus.textContent = 'กำลังจับเสียง...';
+  };
+
+  recognition.onend = function() {
+    isRecording = false;
+    micBtn.classList.remove('recording');
+    if (finalTranscript.trim()) {
+      recStatus.textContent = 'กำลังค้นหา...';
+      setTimeout(() => {
+        recOverlay.classList.remove('show');
+        document.getElementById('search-input').value = finalTranscript.trim();
+        var el = document.getElementById('search-input');
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 150) + 'px';
+        currentQuery = finalTranscript.trim();
+        doSearch();
+      }, 500);
+    } else {
+      recStatus.textContent = 'ไม่ได้ยินเสียง';
+      recTranscript.textContent = 'ลองใหม่อีกครั้ง หรือแตะเพื่อปิด';
+      setTimeout(() => { recOverlay.classList.remove('show'); }, 2000);
+    }
+  };
+
+  recognition.onerror = function(event) {
+    isRecording = false;
+    micBtn.classList.remove('recording');
+    const msg = event.error === 'no-speech' ? 'ไม่ได้ยินเสียง ลองใหม่อีกครั้ง'
+      : event.error === 'not-allowed' ? 'กรุณาอนุญาตการใช้ไมโครโฟน'
+      : 'เกิดข้อผิดพลาด: ' + event.error;
+    recStatus.textContent = msg;
+    recTranscript.textContent = '';
+    setTimeout(() => { recOverlay.classList.remove('show'); }, 2500);
+  };
+}
+
+function toggleRecording() {
+  if (!recognition) return;
+  if (isRecording) {
+    recognition.stop();
+  } else {
+    try { recognition.start(); }
+    catch(e) { recognition.stop(); setTimeout(() => recognition.start(), 200); }
+  }
+}
+
+function doSearch() {
+  const query = document.getElementById('search-input').value.trim();
+  currentQuery = query;
+  document.getElementById('btn-clear').classList.toggle('show', query.length > 0);
+  if (!DATA) return;
+  if (!query && !document.getElementById('filter-artist').value
+      && !document.getElementById('filter-emotion').value
+      && !document.getElementById('filter-year').value) {
+    document.getElementById('search-progress').classList.remove('active');
+    renderResults([], '');
+    return;
+  }
+  const fa = document.getElementById('filter-artist').value;
+  const fe = document.getElementById('filter-emotion').value;
+  const fy = document.getElementById('filter-year').value;
+
+  if (searchWorker) {
+    document.getElementById('search-progress').classList.add('active');
+    searchWorker.postMessage({ type: 'search', payload: { query: query || '  ', filterArtist: fa, filterEmotion: fe, filterYear: fy } });
+  } else {
+    const results = search(query || '  ');
+    document.getElementById('search-progress').classList.remove('active');
+    renderResults(results, query);
+  }
+}
+
+function clearSearch() {
+  var el = document.getElementById('search-input');
+  el.value = '';
+  el.style.height = 'auto';
+  currentQuery = '';
+  document.getElementById('btn-clear').classList.remove('show');
+  document.getElementById('filter-artist').value = '';
+  document.getElementById('filter-emotion').value = '';
+  document.getElementById('filter-year').value = '';
+  renderResults([], '');
+  el.focus();
+}
+
+// ===== Theme =====
+function getTheme() {
+  try { return localStorage.getItem('theme') || 'auto'; } catch { return 'auto'; }
+}
+function applyTheme(theme) {
+  const root = document.documentElement;
+  if (theme === 'dark') {
+    root.setAttribute('data-theme', 'dark');
+  } else if (theme === 'light') {
+    root.setAttribute('data-theme', 'light');
+  } else {
+    root.removeAttribute('data-theme');
+  }
+  updateThemeIcon();
+}
+function toggleTheme() {
+  const isDark = isDarkActive();
+  const next = isDark ? 'light' : 'dark';
+  try { localStorage.setItem('theme', next); } catch {}
+  applyTheme(next);
+}
+function isDarkActive() {
+  const theme = getTheme();
+  if (theme === 'dark') return true;
+  if (theme === 'light') return false;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+function updateThemeIcon() {
+  const btn = document.getElementById('btn-theme');
+  if (btn) btn.textContent = isDarkActive() ? '☀️' : '🌙';
+}
+applyTheme(getTheme());
+
+// ===== Utilities =====
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+function escRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// ===== Init =====
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+document.getElementById('search-input').addEventListener('input', function() {
+  autoResize(this);
+  clearTimeout(debounceTimer);
+  if (this.value.trim()) {
+    document.getElementById('search-progress').classList.add('active');
+  } else {
+    document.getElementById('filter-artist').value = '';
+    document.getElementById('filter-emotion').value = '';
+    document.getElementById('filter-year').value = '';
+  }
+  debounceTimer = setTimeout(doSearch, 300);
+  document.getElementById('btn-clear').classList.toggle('show', this.value.length > 0);
+});
+
+document.getElementById('search-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); clearTimeout(debounceTimer); doSearch(); }
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.getElementById('modal-overlay').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+});
+
+window.addEventListener('scroll', function() {
+  document.getElementById('btn-top').classList.toggle('show', window.scrollY > 400);
+}, { passive: true });
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+initSpeechRecognition();
+loadData();
+</script>
+</body>
+</html>
